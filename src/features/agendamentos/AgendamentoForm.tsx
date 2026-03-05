@@ -2,7 +2,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { criarAgendamento } from "../../services/api";
+import { criarAgendamento } from "../../api/agendamentoAPI";
 import { useAuthStore } from "../../store/authStore";
 
 const schema = z.object({
@@ -14,32 +14,47 @@ const schema = z.object({
 type FormData = z.infer<typeof schema>;
 
 const inputStyle = {
-  width: "100%", boxSizing: "border-box" as const,
-  background: "#080808", border: "1px solid #1c1c1c",
-  borderRadius: "12px", padding: "11px 14px",
-  color: "#e0e0e0", fontSize: "14px", outline: "none",
+  width: "100%",
+  boxSizing: "border-box" as const,
+  background: "#080808",
+  border: "1px solid #1c1c1c",
+  borderRadius: "12px",
+  padding: "11px 14px",
+  color: "#e0e0e0",
+  fontSize: "14px",
+  outline: "none",
   transition: "border-color 0.2s",
 };
 
 const labelStyle = {
-  display: "block", color: "#3a3a3a", fontSize: "11px",
-  fontWeight: "600" as const, letterSpacing: "0.1em",
-  textTransform: "uppercase" as const, marginBottom: "7px",
+  display: "block",
+  color: "#3a3a3a",
+  fontSize: "11px",
+  fontWeight: "600" as const,
+  letterSpacing: "0.1em",
+  textTransform: "uppercase" as const,
+  marginBottom: "7px",
 };
 
 export function AgendamentoForm() {
   const { user } = useAuthStore();
   const queryClient = useQueryClient();
 
-  const { register, handleSubmit, formState: { errors }, reset } = useForm<FormData>({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm<FormData>({
     resolver: zodResolver(schema),
   });
 
   const mutation = useMutation({
-    mutationFn: (data: FormData) => criarAgendamento({
-      ...data,
-      tenantId: user?.tenantId ?? "default",
-    }),
+    mutationFn: (data: FormData) =>
+      criarAgendamento({
+        ...data,
+        tenantId: user?.tenantId ?? "default",
+      }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["agendamentos"] });
       reset();
@@ -54,8 +69,13 @@ export function AgendamentoForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      style={{ display: "flex", flexDirection: "column", gap: "16px" }}
+    >
+      <div
+        style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}
+      >
         {/* Profissional */}
         <div>
           <label style={labelStyle}>Profissional</label>
@@ -63,7 +83,9 @@ export function AgendamentoForm() {
             {...register("profissional")}
             placeholder="Nome do profissional"
             style={inputStyle}
-            onFocus={(e) => (e.target.style.borderColor = "rgba(74,222,128,0.3)")}
+            onFocus={(e) =>
+              (e.target.style.borderColor = "rgba(74,222,128,0.3)")
+            }
             onBlur={(e) => (e.target.style.borderColor = "#1c1c1c")}
           />
           {errors.profissional && (
@@ -80,7 +102,9 @@ export function AgendamentoForm() {
             {...register("paciente")}
             placeholder="Nome do paciente"
             style={inputStyle}
-            onFocus={(e) => (e.target.style.borderColor = "rgba(74,222,128,0.3)")}
+            onFocus={(e) =>
+              (e.target.style.borderColor = "rgba(74,222,128,0.3)")
+            }
             onBlur={(e) => (e.target.style.borderColor = "#1c1c1c")}
           />
           {errors.paciente && (
@@ -119,9 +143,11 @@ export function AgendamentoForm() {
             border: `1px solid ${mutation.isPending ? "#1c1c1c" : "rgba(74,222,128,0.2)"}`,
             borderRadius: "12px",
             color: mutation.isPending ? "#333" : "#4ade80",
-            fontSize: "13px", fontWeight: "600",
+            fontSize: "13px",
+            fontWeight: "600",
             cursor: mutation.isPending ? "not-allowed" : "pointer",
-            transition: "all 0.2s", letterSpacing: "0.04em",
+            transition: "all 0.2s",
+            letterSpacing: "0.04em",
           }}
           onMouseEnter={(e) => {
             if (!mutation.isPending) {
