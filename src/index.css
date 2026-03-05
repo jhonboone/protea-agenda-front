@@ -1,0 +1,8 @@
+@import "tailwindcss";
+
+@theme {
+  --color-protea-50: #f0fdf4;
+  --color-protea-500: #22c55e;
+  --color-protea-600: #16a34a;
+  --color-protea-700: #15803d;
+}
