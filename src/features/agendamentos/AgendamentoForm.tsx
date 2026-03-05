@@ -2,7 +2,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { criarAgendamento } from "../../services/agendamentoService";
+import { criarAgendamento } from "../../services/api";
 import { useAuthStore } from "../../store/authStore";
 
 const schema = z.object({
@@ -36,7 +36,10 @@ export function AgendamentoForm() {
   });
 
   const mutation = useMutation({
-    mutationFn: criarAgendamento,
+    mutationFn: (data: FormData) => criarAgendamento({
+      ...data,
+      tenantId: user?.tenantId ?? "default",
+    }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["agendamentos"] });
       reset();
@@ -47,10 +50,7 @@ export function AgendamentoForm() {
   });
 
   const onSubmit = (data: FormData) => {
-    mutation.mutate({
-      ...data,
-      tenantId: user?.tenantId ?? "default",
-    });
+    mutation.mutate(data);
   };
 
   return (

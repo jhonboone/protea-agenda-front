@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { listarAgendamentos, deletarAgendamento } from "../../services/agendamentoService";
+import { listarAgendamentos, deletarAgendamento } from "../../services/api";
+import type { Agendamento } from "../../types/agendamento";
 import { useAuthStore } from "../../store/authStore";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
@@ -46,7 +47,7 @@ export function AgendamentoList() {
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-      {agendamentos.map((ag) => (
+      {agendamentos.map((ag: Agendamento) => (
         <div
           key={ag.id}
           style={{
