@@ -3,7 +3,6 @@ import { persist } from "zustand/middleware";
 
 interface User {
   id: string;
-  nome: string;
   email: string;
   tenantId: string;
   role: "ADMIN" | "PROFISSIONAL" | "RECEPCIONISTA";

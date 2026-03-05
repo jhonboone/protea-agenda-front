@@ -21,9 +21,13 @@ export function LoginPage() {
       );
       login(data.user, data.token);
       navigate("/dashboard");
-    } catch (error: any) {
-      const msg = error.response?.data || error.message || "Erro desconhecido";
-      setErro(typeof msg === "string" ? msg : JSON.stringify(msg));
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        const msg = error.response?.data || error.message;
+        setErro(typeof msg === "string" ? msg : JSON.stringify(msg));
+      } else {
+        setErro("Erro desconhecido");
+      }
     } finally {
       setLoading(false);
     }
